@@ -1,5 +1,7 @@
 import pygame
 import sys
+from pygame import Vector3
+from triangle import Triangle
 
 
 class Engine3D:
@@ -18,7 +20,7 @@ class Engine3D:
 
         self.running = False
 
-        self.objects = None
+        self.objects = []
 
     def construct_console(self, width=400, height=200, window_name="Default", tps=60.0):
         self.width = width
@@ -63,6 +65,10 @@ class Engine3D:
             self.draw()
             pygame.display.flip()
 
+    def draw(self):
+        for obj in self.objects:
+            obj.draw(self.screen)
+
     # functions to override
     def update(self):
         pass
@@ -70,5 +76,4 @@ class Engine3D:
     def tick(self):
         pass
 
-    def draw(self):
-        pass
+

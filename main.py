@@ -1,21 +1,20 @@
-from Engine3D import Engine3D
+from engine3D import Engine3D
 import pygame
+from pygame import Vector3
+from triangle import Triangle
 
 
 class Engine(Engine3D):
     def __init__(self):
         super().__init__()
-        self.objects = pygame.Rect(10, 10, 50, 50)
+        self.objects.append(Triangle())
 
     def update(self):
         pass
 
     def tick(self):
-        self.objects.x += 1
-
-    def draw(self):
-        # pass
-        pygame.draw.rect(self.screen, (255, 255, 255), self.objects)
+        # self.objects.x += 1
+        pass
 
 
 engine = Engine()
