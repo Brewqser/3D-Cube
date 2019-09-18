@@ -1,7 +1,22 @@
 import pygame
 import sys
-from pygame import Vector3
-from matrixop import MatrixOp
+import numpy as np
+from math import tan, pi
+
+
+def create_projection_matrix(width, height):
+    fNear = 0.1
+    fFar = 1000.0
+    fFov = 90.0
+    fAspectRatio = float(height) / float(width)
+    fFovRad = 1.0 / tan(fFov * 0.5 / 180.0 * pi)
+
+    projection_matrix = np.array([[fAspectRatio * fFovRad, 0, 0, 0],
+                                  [0, fFovRad, 0, 0],
+                                  [0, 0, fFar / (fFar - fNear), 1],
+                                  [0, 0, (-fFar * fNear) / (fFar - fNear), 0]])
+
+    return projection_matrix
 
 
 class Engine3D:
@@ -21,7 +36,7 @@ class Engine3D:
         self.running = False
 
         self.objects = []
-        self.matrix = MatrixOp(1, 1)
+        self.matrix = create_projection_matrix(1, 1)
 
     def construct_console(self, width=400, height=200, window_name="Default", tps=60.0):
         self.width = width
@@ -30,9 +45,7 @@ class Engine3D:
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption(self.window_name)
 
-        self.matrix = MatrixOp(self.width, self.height)
-        # print(self.matrix.projection_matrix)
-        # print(self.matrix.get_projected(Vector3(1, 1, 1)))
+        self.matrix = create_projection_matrix(self.width, self.height)
 
         self.tps = tps
         self.running = False
@@ -67,18 +80,22 @@ class Engine3D:
 
             # Render
             self.screen.fill((0, 0, 0))
+            self.draw_obj()
             self.draw()
             pygame.display.flip()
 
-    def draw(self):
+    def draw_obj(self):
         for obj in self.objects:
-            obj.draw(self.screen, self.matrix)
+            obj.draw(self)
 
     # functions to override
     def update(self):
         pass
 
     def tick(self):
+        pass
+
+    def draw(self):
         pass
 
 
