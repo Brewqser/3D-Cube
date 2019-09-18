@@ -1,7 +1,7 @@
 import pygame
 import sys
 from pygame import Vector3
-from triangle import Triangle
+from matrixop import MatrixOp
 
 
 class Engine3D:
@@ -21,6 +21,7 @@ class Engine3D:
         self.running = False
 
         self.objects = []
+        self.matrix = MatrixOp(1, 1)
 
     def construct_console(self, width=400, height=200, window_name="Default", tps=60.0):
         self.width = width
@@ -28,6 +29,10 @@ class Engine3D:
         self.window_name = window_name
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption(self.window_name)
+
+        self.matrix = MatrixOp(self.width, self.height)
+        # print(self.matrix.projection_matrix)
+        # print(self.matrix.get_projected(Vector3(1, 1, 1)))
 
         self.tps = tps
         self.running = False
@@ -67,7 +72,7 @@ class Engine3D:
 
     def draw(self):
         for obj in self.objects:
-            obj.draw(self.screen)
+            obj.draw(self.screen, self.matrix)
 
     # functions to override
     def update(self):

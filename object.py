@@ -6,5 +6,5 @@ class Object:
     def __init__(self):
         self.vertex = []
 
-    def draw(self):
+    def draw(self, scr, mat):
         pass
