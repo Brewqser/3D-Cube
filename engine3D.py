@@ -1,7 +1,8 @@
 import pygame
 import sys
 import numpy as np
-from math import tan, pi
+from math import tan, pi, radians
+from camera import Camera
 
 
 def create_projection_matrix(width, height):
@@ -9,7 +10,7 @@ def create_projection_matrix(width, height):
     fFar = 1000.0
     fFov = 90.0
     fAspectRatio = float(height) / float(width)
-    fFovRad = 1.0 / tan(fFov * 0.5 / 180.0 * pi)
+    fFovRad = 1.0 / tan(radians(fFov * 0.5))
 
     projection_matrix = np.array([[fAspectRatio * fFovRad, 0, 0, 0],
                                   [0, fFovRad, 0, 0],
@@ -29,6 +30,8 @@ class Engine3D:
         self.window_name = None
         self.screen = None
 
+        self.camera = Camera()
+
         self.tps = None
         self.tps_clock = pygame.time.Clock()
         self.tps_dt = 0.0
@@ -45,10 +48,12 @@ class Engine3D:
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption(self.window_name)
 
-        self.matrix = create_projection_matrix(self.width, self.height)
+        self.camera = Camera()
 
         self.tps = tps
         self.running = False
+
+        self.matrix = create_projection_matrix(self.width, self.height)
 
         return True
 

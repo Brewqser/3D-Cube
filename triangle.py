@@ -1,5 +1,3 @@
-
-
 import pygame
 from copy import deepcopy
 from object import Object
@@ -11,7 +9,7 @@ class Triangle(Object):
                  a=Vector3(0, 0, 0),
                  b=Vector3(1, 1, 0),
                  c=Vector3(2, 0, 0),
-                 color=(255, 255, 255),
+                 color=Vector3(255, 255, 255),
                  scale=40,
                  fill=False,
                  width=1):
@@ -62,35 +60,52 @@ class Triangle(Object):
 
         p = deepcopy(self.vertex)
 
+        # Rotation
         self.rotZ(p)
         self.rotX(p)
         self.rotY(p)
 
-        p[0][2] += 3
-        p[1][2] += 3
-        p[2][2] += 3
+        # Translation
+        p[0].z += 3
+        p[1].z += 3
+        p[2].z += 3
 
-        pro = [project3Dto2D(p[0], eng.matrix),
-               project3Dto2D(p[1], eng.matrix),
-               project3Dto2D(p[2], eng.matrix)]
+        # Normal
+        normal = Vector3.cross(p[2] - p[0], p[1] - p[0]).normalize()
 
-        pro[0][0] += 1
-        pro[0][1] += 1
-        pro[1][0] += 1
-        pro[1][1] += 1
-        pro[2][0] += 1
-        pro[2][1] += 1
+        # Drawing
+        # print (Vector3.dot(normal, p[0] - eng.camera.pos))
 
-        pro[0][0] *= 0.5 * eng.screen.get_width()
-        pro[0][1] *= 0.5 * eng.screen.get_height()
-        pro[1][0] *= 0.5 * eng.screen.get_width()
-        pro[1][1] *= 0.5 * eng.screen.get_height()
-        pro[2][0] *= 0.5 * eng.screen.get_width()
-        pro[2][1] *= 0.5 * eng.screen.get_height()
+        if Vector3.dot(normal, p[0] - eng.camera.pos) < 0.0:
+            #light
 
-        pointlist = [(i[0], i[1]) for i in pro]
+            lig = Vector3 (0, 0, -1)
+            lig = lig.normalize()
+            dp = Vector3.dot(normal, lig)
 
-        if self.fill:
-            pygame.draw.polygon(eng.screen, self.color, pointlist)
-        else:
-            pygame.draw.polygon(eng.screen, self.color, pointlist, self.width)
+            self.color *= dp
+
+            pro = [project3Dto2D(p[0], eng.matrix),
+                   project3Dto2D(p[1], eng.matrix),
+                   project3Dto2D(p[2], eng.matrix)]
+
+            pro[0][0] += 1
+            pro[0][1] += 1
+            pro[1][0] += 1
+            pro[1][1] += 1
+            pro[2][0] += 1
+            pro[2][1] += 1
+
+            pro[0][0] *= 0.5 * eng.screen.get_width()
+            pro[0][1] *= 0.5 * eng.screen.get_height()
+            pro[1][0] *= 0.5 * eng.screen.get_width()
+            pro[1][1] *= 0.5 * eng.screen.get_height()
+            pro[2][0] *= 0.5 * eng.screen.get_width()
+            pro[2][1] *= 0.5 * eng.screen.get_height()
+
+            pointlist = [(i[0], i[1]) for i in pro]
+
+            if self.fill:
+                pygame.draw.polygon(eng.screen, self.color, pointlist)
+            else:
+                pygame.draw.polygon(eng.screen, self.color, pointlist, self.width)

@@ -1,6 +1,6 @@
 import numpy as np
 from pygame import Vector3
-from math import sin, cos
+from math import sin, cos, radians
 
 
 def matmul(a, b):
@@ -12,24 +12,27 @@ def matmul(a, b):
 
 
 def rotateX(a=Vector3(0, 0, 0), angle=0):
+    ang = radians(angle)
     matrix = np.array([[1, 0, 0, 0],
-                       [0, cos(angle), -sin(angle), 0],
-                       [0, sin(angle), cos(angle), 0],
+                       [0, cos(ang), -sin(ang), 0],
+                       [0, sin(ang), cos(ang), 0],
                        [0, 0, 0, 1]])
     return matmul(a, matrix)
 
 
 def rotateY(a=Vector3(0, 0, 0), angle=0):
-    matrix = np.array([[cos(angle), 0, sin(angle), 0],
+    ang = radians(angle)
+    matrix = np.array([[cos(ang), 0, sin(ang), 0],
                        [0, 1, 0, 0],
-                       [-sin(angle), 0, cos(angle), 0],
+                       [-sin(ang), 0, cos(ang), 0],
                        [0, 0, 0, 1]])
     return matmul(a, matrix)
 
 
 def rotateZ(a=Vector3(0, 0, 0), angle=0):
-    matrix = np.array([[cos(angle), -sin(angle), 0, 0],
-                       [sin(angle), cos(angle), 0, 0],
+    ang = radians(angle)
+    matrix = np.array([[cos(ang), -sin(ang), 0, 0],
+                       [sin(ang), cos(ang), 0, 0],
                        [0, 0, 1, 0],
                        [0, 0, 0, 1]])
     return matmul(a, matrix)
